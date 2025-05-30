@@ -93,7 +93,7 @@
                             terre.on('pointerdown', () => plantage(terre, this));
                             
                         }
-                    
+                    }
                     // 📌 Création de la boutique (masquée par défaut)
                     boutique = this.add.group();
 
@@ -107,12 +107,11 @@
                 
                     boutique.add(fondBoutique); 
                     boutique.add(boutonFermer);
-                    boutique.add(boutonAcheter);
                     boutique.add(buySeedBle);
                     // 🚀 Masquer la boutique au démarrage
                     boutique.setVisible(false);
 
-                }
+                
 
 
                     keyInputs = this.input.keyboard.createCursorKeys();
