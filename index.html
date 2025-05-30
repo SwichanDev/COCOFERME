@@ -38,7 +38,7 @@
             var blocsTerre;
 
             function preload(){
-                this.load.image('terreVide', 'img/terreVide.png');
+                this.load.image('terreVide', 'img/nTerreVide.png');
                 this.load.image('buy', 'img/marche.png');
                 this.load.image('sell', 'img/VenteBle.png');
                 this.load.image('back', 'img/back4.png');
@@ -47,11 +47,10 @@
                 this.load.image('sacGraine', 'img/sacGraine.png');
                 this.load.image('sacGraineBleShop', 'img/sacBleShop.png');
                 
-                this.load.image('shop_bg', 'img/shopBG.png');
-                for (let i = 1; i < 8; i++) {
-                    let imageKey = 'terreBle' + i;
-                    let imagePath = 'img/' + imageKey + '.png';
-                    this.load.image(imageKey, imagePath);
+                this.load.image('shop_bg', 'img/shopBG.png')
+                ;
+                for (let i = 1; i < 11; i++) {
+                    this.load.image('nTerreBle' + i, 'img/nTerreBle' + i + '.png');
                 } 
                 
                 }
@@ -98,7 +97,7 @@
                     boutique = this.add.group();
 
                     let fondBoutique = this.add.image(500, 400, 'shop_bg').setScale(1.5);
-                    let boutonFermer = this.add.text(750, 200, "Fermer", { fontSize: '32px', color: '#ffffff' })
+                    let boutonFermer = this.add.text(670, 650, "Aurevoir !", { fontSize: '32px', color: '#ffffff' })
                         .setInteractive()
                         .on('pointerdown', () => fermerBoutique());
                     
@@ -150,25 +149,25 @@
             function sellBle(){
                 if (ble > 0){
                     argent = argent + 12 * ble
-                    ble-= 0;
+                    ble = 0;
                     bleTexte.setText("Ble: " + ble); // Met à jour l'affichage
                 }
             }
             function changerTextureBle(terre) {
-                let num = parseInt(terre.texture.key.slice(-1));
-                if (num !== 7){
-                    terre.setTexture('terreBle' + (num + 1));
+                let num = parseInt(terre.texture.key.replace('nTerreBle', ''));
+                if (num !== 10){
+                    terre.setTexture('nTerreBle' + (num + 1));
                 }    
             }
 
             function plantage(terre) {
                 let bloc = blocsTerre.find(b => b.sprite === terre);
-
+                
                 if (graine > 0 && bloc.sprite.texture.key === 'terreVide') {
-                    bloc.sprite.setTexture('terreBle1'); // Change l’image
+                    bloc.sprite.setTexture('nTerreBle1'); // Change l’image
                     bloc.croissance = 0; // Démarre le chrono
                     graine--;
-                } else if (bloc.sprite.texture.key === 'terreBle7') {
+                } else if (bloc.sprite.texture.key === 'nTerreBle10') {
                     bloc.sprite.setTexture('terreVide'); // Réinitialisation
                     bloc.croissance = -1
                     ble++;
