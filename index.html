@@ -32,6 +32,7 @@
             var keyInputs;
             let terre;
             let buy;
+            let buySeedBle;
             let sell;
             var game = new Phaser.Game(config);
             var blocsTerre;
@@ -44,7 +45,9 @@
                 this.load.image('bleIMG', 'img/ble.png');
                 this.load.image('argentIMG', 'img/argent.png');
                 this.load.image('sacGraine', 'img/sacGraine.png');
-
+                this.load.image('sacGraineBleShop', 'img/sacBleShop.png');
+                
+                this.load.image('shop_bg', 'img/shopBG.png');
                 for (let i = 1; i < 8; i++) {
                     let imageKey = 'terreBle' + i;
                     let imagePath = 'img/' + imageKey + '.png';
@@ -71,7 +74,7 @@
                     graineTexte = this.add.text(710, 30, graine, { fontSize: '32px', color: '#ffffff', fontStyle: 'bold' });
                     bleTexte = this.add.text(260, 30, ble, { fontSize: '32px', color: '#ffffff', fontStyle: 'bold' });
 
-                    buy.on('pointerdown', function () { acheterGraines(); });
+                    buy.on('pointerdown', function () { ouvrirBoutique(); });
                     sell.on('pointerdown', function () { sellBle(); });
 
                     blocsTerre = []; // Stocker tous les blocs
@@ -91,6 +94,23 @@
                             
                         }
                     
+                    // 📌 Création de la boutique (masquée par défaut)
+                    boutique = this.add.group();
+
+                    let fondBoutique = this.add.image(500, 400, 'shop_bg').setScale(1.5);
+                    let boutonFermer = this.add.text(750, 200, "Fermer", { fontSize: '32px', color: '#ffffff' })
+                        .setInteractive()
+                        .on('pointerdown', () => fermerBoutique());
+                    
+                    let buySeedBle = this.add.sprite(200, 200, 'sacGraineBleShop').setInteractive();
+                    buySeedBle.on('pointerdown', function () { acheterGraines(); });
+                
+                    boutique.add(fondBoutique); 
+                    boutique.add(boutonFermer);
+                    boutique.add(boutonAcheter);
+                    boutique.add(buySeedBle);
+                    // 🚀 Masquer la boutique au démarrage
+                    boutique.setVisible(false);
 
                 }
 
@@ -115,6 +135,12 @@
 
             }
 
+            function ouvrirBoutique() {
+                boutique.setVisible(true); // Montre la boutique
+            }
+                        function fermerBoutique() {
+                boutique.setVisible(false); // Cache la boutique
+            }
             function acheterGraines(){
                 if (argent >= 10){
                     graine++;
@@ -124,8 +150,8 @@
             }
             function sellBle(){
                 if (ble > 0){
-                    argent = argent + 12
-                    ble--;
+                    argent = argent + 12 * ble
+                    ble-= 0;
                     bleTexte.setText("Ble: " + ble); // Met à jour l'affichage
                 }
             }
