@@ -27,7 +27,7 @@
             var ble = 0;
             let bleTexte;
             var graineStockBuy;
-            var graine = 100;
+            var graine = 10;
             let graineTexte;
             var keyInputs;
             let terre;
@@ -38,8 +38,8 @@
 
             function preload(){
                 this.load.image('terreVide', 'img/terreVide.png');
-                this.load.image('buy', 'img/graineAchat.png');
-                this.load.image('sell', 'img/bleVente.png');
+                this.load.image('buy', 'img/marche.png');
+                this.load.image('sell', 'img/VenteBle.png');
                 this.load.image('back', 'img/back4.png');
                 this.load.image('bleIMG', 'img/ble.png');
                 this.load.image('argentIMG', 'img/argent.png');
@@ -64,8 +64,8 @@
                     this.add.image(430, 30, 'argentIMG'); // Ajout du sprite
                     this.add.image(680, 30, 'sacGraine'); // Ajout du sprite
 
-                    let buy = this.add.sprite(900, 340, 'buy').setInteractive();
-                    let sell = this.add.sprite(100, 340, 'sell').setInteractive();
+                    let buy = this.add.sprite(920, 340, 'buy').setInteractive();
+                    let sell = this.add.sprite(50, 200, 'sell').setInteractive();
 
                     argentTexte = this.add.text(480, 30, argent, { fontSize: '32px', color: '#ffffff', fontStyle: 'bold' });
                     graineTexte = this.add.text(710, 30, graine, { fontSize: '32px', color: '#ffffff', fontStyle: 'bold' });
