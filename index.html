@@ -1,0 +1,158 @@
+<html>
+    <head>
+        <script src="//cdn.jsdelivr.net/npm/phaser@3.24.1/dist/phaser.js"></script>
+    </head>
+    <body>
+        <script>
+            var config = {
+                type: Phaser.AUTO,
+                backgroundColor: 0x00d52a,
+                width: 1000,
+                height: 800,
+                physics: {
+                    default: 'arcade', // Ajout de la virgule ici
+                    arcade: {
+                        timeStep: 1000 / 30
+                    }
+                },
+                scene: {
+                    preload: preload,
+                    create: create,
+                    update: update
+                }
+            };
+
+            var argent = 500;
+            let argentTexte;
+            var ble = 0;
+            let bleTexte;
+            var graineStockBuy;
+            var graine = 100;
+            let graineTexte;
+            var keyInputs;
+            let terre;
+            let buy;
+            let sell;
+            var game = new Phaser.Game(config);
+            var blocsTerre;
+
+            function preload(){
+                this.load.image('terreVide', 'img/terreVide.png');
+                this.load.image('buy', 'img/graineAchat.png');
+                this.load.image('sell', 'img/bleVente.png');
+                this.load.image('back', 'img/back4.png');
+                this.load.image('bleIMG', 'img/ble.png');
+                this.load.image('argentIMG', 'img/argent.png');
+                this.load.image('sacGraine', 'img/sacGraine.png');
+
+                for (let i = 1; i < 8; i++) {
+                    let imageKey = 'terreBle' + i;
+                    let imagePath = 'img/' + imageKey + '.png';
+                    this.load.image(imageKey, imagePath);
+                } 
+                
+                }
+
+                function create(){
+
+                    this.add.image(0, 0, 'back'); // Ajout du sprite
+                    this.add.image(500, 0, 'back'); // Ajout du sprite
+                    this.add.image(0, 400, 'back'); // Ajout du sprite
+                    this.add.image(500, 400, 'back'); // Ajout du sprite
+
+                    this.add.image(230, 30, 'bleIMG'); // Ajout du sprite
+                    this.add.image(430, 30, 'argentIMG'); // Ajout du sprite
+                    this.add.image(680, 30, 'sacGraine'); // Ajout du sprite
+
+                    let buy = this.add.sprite(900, 340, 'buy').setInteractive();
+                    let sell = this.add.sprite(100, 340, 'sell').setInteractive();
+
+                    argentTexte = this.add.text(480, 30, argent, { fontSize: '32px', color: '#ffffff', fontStyle: 'bold' });
+                    graineTexte = this.add.text(710, 30, graine, { fontSize: '32px', color: '#ffffff', fontStyle: 'bold' });
+                    bleTexte = this.add.text(260, 30, ble, { fontSize: '32px', color: '#ffffff', fontStyle: 'bold' });
+
+                    buy.on('pointerdown', function () { acheterGraines(); });
+                    sell.on('pointerdown', function () { sellBle(); });
+
+                    blocsTerre = []; // Stocker tous les blocs
+                    for (let i = 0; i < 10; i++) { 
+                        for (let j = 0; j < 13; j++) { 
+                            let x = 203 + 50 * j; 
+                            let y = 217 + 50 * i; 
+                            let terre = this.add.sprite(x, y, 'terreVide'); // Ajout du sprite
+                            terre.setInteractive(); // Permet de cliquer dessus
+                            // Ajout de l'événement de clic
+                            blocsTerre.push({
+                                sprite: terre,
+                                croissance: -1 // -1 signifie qu'aucune graine n'est plantée
+                            });
+
+                            terre.on('pointerdown', () => plantage(terre, this));
+                            
+                        }
+                    
+
+                }
+
+
+                    keyInputs = this.input.keyboard.createCursorKeys();
+                }
+             function update(){
+                argentTexte.setText(argent);
+                graineTexte.setText(graine);
+                bleTexte.setText(ble); // Met à jour l'affichage
+
+                for (const bloc of blocsTerre) {
+                    if (bloc.croissance !== -1) {
+                        bloc.croissance++;
+                        if (bloc.croissance === 60) { // Quand atteint 60 frames (~2 secondes à 30 FPS)
+                            changerTextureBle(bloc.sprite);
+                            bloc.croissance =0
+                        }
+                    }
+                }
+
+
+            }
+
+            function acheterGraines(){
+                if (argent >= 10){
+                    graine++;
+                    argent = argent - 10
+                    graineTexte.setText("Graine: " + graine); // Met à jour l'affichage
+                }
+            }
+            function sellBle(){
+                if (ble > 0){
+                    argent = argent + 12
+                    ble--;
+                    bleTexte.setText("Ble: " + ble); // Met à jour l'affichage
+                }
+            }
+            function changerTextureBle(terre) {
+                let num = parseInt(terre.texture.key.slice(-1));
+                if (num !== 7){
+                    terre.setTexture('terreBle' + (num + 1));
+                }    
+            }
+
+            function plantage(terre) {
+                let bloc = blocsTerre.find(b => b.sprite === terre);
+
+                if (graine > 0 && bloc.sprite.texture.key === 'terreVide') {
+                    bloc.sprite.setTexture('terreBle1'); // Change l’image
+                    bloc.croissance = 0; // Démarre le chrono
+                    graine--;
+                } else if (bloc.sprite.texture.key === 'terreBle7') {
+                    bloc.sprite.setTexture('terreVide'); // Réinitialisation
+                    bloc.croissance = -1
+                    ble++;
+                }
+}
+
+
+        </script>
+    </body>
+ </html>
+
+ 
